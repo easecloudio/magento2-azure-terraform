@@ -38,7 +38,7 @@ resource "azurerm_cdn_frontdoor_origin" "appgw" {
   enabled                       = true
 
   certificate_name_check_enabled = false
-  host_name                      = azurerm_public_ip.appgw.ip_address
+  host_name                      = azurerm_public_ip.appgw.fqdn
   http_port                      = 80
   https_port                     = 443
   origin_host_header             = local.env.domain

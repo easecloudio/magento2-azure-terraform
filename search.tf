@@ -43,6 +43,10 @@ resource "azurerm_linux_virtual_machine" "opensearch" {
     disk_size_gb         = 50
   }
 
+  identity {
+    type = "SystemAssigned"
+  }
+
   custom_data = base64encode(<<-EOT
     #!/bin/bash
     set -euo pipefail

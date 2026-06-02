@@ -14,7 +14,7 @@ resource "azurerm_servicebus_queue" "this" {
   name         = "${local.project}-magento-queue"
   namespace_id = azurerm_servicebus_namespace.this.id
 
-  enable_partitioning   = false
+  partitioning_enabled  = false
   lock_duration         = "PT5M"
   max_size_in_megabytes = 1024
 }

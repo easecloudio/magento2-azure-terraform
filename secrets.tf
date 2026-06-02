@@ -3,7 +3,7 @@
 ///////////////////////////////////////////////////////////[ AZURE KEY VAULT + SECRETS ]/////////////////////////////////////////////////////
 
 resource "azurerm_key_vault" "this" {
-  name                     = "${replace(local.project, "-", "")}-kv"
+  name                     = "${substr(replace(local.project, "-", ""), 0, 21)}-kv"
   resource_group_name      = azurerm_resource_group.this.name
   location                 = azurerm_resource_group.this.location
   tenant_id                = data.azurerm_client_config.current.tenant_id

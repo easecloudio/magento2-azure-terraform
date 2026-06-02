@@ -1,0 +1,100 @@
+brand: easecloud
+codename: magento
+github_repo: "your-org/your-magento-repo"
+
+domain: "yourdomain.com"
+admin_email: "admin@yourdomain.com"
+
+azure:
+  subscription_id: ""
+  location: "eastus"
+  resource_group: ""
+
+vnet:
+  cidr_block: "172.35.0.0/16"
+  availability_zones_qty: 2
+
+vmss:
+  frontend:
+    vm_size: "Standard_D4ps_v5"
+    os_disk_size_gb: 50
+    desired_capacity: 2
+    min_count: 2
+    max_count: 8
+  varnish:
+    vm_size: "Standard_D2ps_v5"
+    os_disk_size_gb: 25
+    desired_capacity: 2
+    min_count: 2
+    max_count: 8
+
+autoscale:
+  cooldown_minutes: 5
+  out_threshold_percent: 80
+  in_threshold_percent: 25
+
+mysql:
+  sku: "GP_Standard_D2ds_v4"
+  storage_gb: 50
+  backup_retention_days: 7
+  engine_version: "8.0.21"
+  admin_login: "magentoadmin"
+  high_availability: false
+  parameters:
+    - { name: "max_allowed_packet",             value: "268435456" }
+    - { name: "wait_timeout",                   value: "7200" }
+    - { name: "interactive_timeout",            value: "7200" }
+    - { name: "innodb_lock_wait_timeout",       value: "60" }
+    - { name: "innodb_flush_log_at_trx_commit", value: "2" }
+
+redis:
+  sku: "Premium"
+  family: "P"
+  capacity: 1
+  name:
+    - "session"
+    - "cache"
+
+search:
+  sku: "standard"
+  replica_count: 1
+  partition_count: 1
+
+service_bus:
+  sku: "Standard"
+
+blob_storage:
+  containers:
+    - "media"
+    - "media-optimized"
+    - "system"
+    - "backup"
+
+azure_files:
+  shares:
+    var:
+      quota_gb: 100
+    media:
+      quota_gb: 500
+
+waf:
+  restricted_countries:
+    - "CN"
+    - "RU"
+    - "IR"
+    - "KP"
+    - "SD"
+    - "SY"
+    - "CU"
+
+password:
+  - "database"
+  - "redis"
+
+string:
+  - "admin_path"
+  - "health_check"
+
+budget:
+  amount: 500
+  threshold_percent: 90

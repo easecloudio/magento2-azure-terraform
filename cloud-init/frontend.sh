@@ -5,6 +5,7 @@ set -euo pipefail
 BRAND="${brand}"
 PROJECT="${project}"
 ENVIRONMENT="${environment}"
+LOCATION="${location}"
 
 hostnamectl set-hostname "frontend.$${BRAND}.internal"
 echo "127.0.0.1 frontend.$${BRAND}.internal" >> /etc/hosts

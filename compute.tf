@@ -14,7 +14,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
 
   admin_ssh_key {
     username   = local.env.brand
-    public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC placeholder-public-key"
+    public_key = local.env.ssh_public_key
   }
 
   source_image_reference {
@@ -50,6 +50,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
     project     = local.project
     environment = local.environment
     brand       = local.env.brand
+    location    = local.env.azure.location
   }))
 
   rolling_upgrade_policy {
@@ -57,6 +58,19 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
     max_unhealthy_instance_percent          = 20
     max_unhealthy_upgraded_instance_percent = 20
     pause_time_between_batches              = "PT0S"
+  }
+
+  extension {
+    name                 = "HealthExtension"
+    publisher            = "Microsoft.ManagedServices"
+    type                 = "ApplicationHealthLinux"
+    type_handler_version = "1.0"
+
+    settings = jsonencode({
+      protocol    = "http"
+      port        = 80
+      requestPath = "/"
+    })
   }
 
   tags = merge(local.default_tags, { instance_type = each.key })

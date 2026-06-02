@@ -14,6 +14,8 @@ vnet:
   cidr_block: "172.35.0.0/16"
   availability_zones_qty: 2
 
+ssh_public_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC... replace-with-your-public-key"
+
 vmss:
   frontend:
     vm_size: "Standard_D4ps_v5"

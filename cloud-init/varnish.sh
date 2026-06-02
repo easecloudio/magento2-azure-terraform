@@ -4,6 +4,7 @@ set -euo pipefail
 BRAND="${brand}"
 PROJECT="${project}"
 ENVIRONMENT="${environment}"
+LOCATION="${location}"
 
 hostnamectl set-hostname "varnish.$${BRAND}.internal"
 echo "127.0.0.1 varnish.$${BRAND}.internal" >> /etc/hosts

@@ -16,6 +16,15 @@ resource "azurerm_consumption_budget_subscription" "this" {
 
   notification {
     enabled        = true
+    threshold      = 75
+    operator       = "GreaterThan"
+    threshold_type = "Actual"
+
+    contact_emails = [local.env.admin_email]
+  }
+
+  notification {
+    enabled        = true
     threshold      = local.env.budget.threshold_percent
     operator       = "GreaterThan"
     threshold_type = "Actual"

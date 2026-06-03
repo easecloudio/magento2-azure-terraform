@@ -83,7 +83,7 @@ resource "azurerm_application_gateway" "this" {
   probe {
     name                = local.appgw_health_probe_name
     protocol            = "Http"
-    host                = "127.0.0.1"
+    host                = local.env.domain
     path                = "/${random_string.this["health_check"].result}"
     interval            = 30
     timeout             = 30

@@ -11,17 +11,6 @@ resource "azurerm_public_ip" "appgw" {
   tags                = local.default_tags
 }
 
-locals {
-  appgw_backend_pool_name         = "${local.project}-varnish-pool"
-  appgw_frontend_port_http_name   = "${local.project}-http-port"
-  appgw_frontend_port_https_name  = "${local.project}-https-port"
-  appgw_frontend_ip_name          = "${local.project}-frontend-ip"
-  appgw_http_settings_name        = "${local.project}-http-settings"
-  appgw_listener_http_name        = "${local.project}-http-listener"
-  appgw_request_routing_http_name = "${local.project}-http-routing"
-  appgw_health_probe_name         = "${local.project}-health-probe"
-  appgw_waf_policy_name           = "${local.project}-waf-policy"
-}
 
 resource "azurerm_web_application_firewall_policy" "this" {
   name                = local.appgw_waf_policy_name

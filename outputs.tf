@@ -48,3 +48,8 @@ output "environment" {
   description = "Active Terraform workspace / environment name"
   value       = local.environment
 }
+
+output "dns_zone_name_servers" {
+  description = "Delegate your domain to these Azure nameservers at your registrar"
+  value       = azurerm_dns_zone.public.name_servers
+}

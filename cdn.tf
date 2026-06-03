@@ -47,9 +47,9 @@ resource "azurerm_cdn_frontdoor_origin" "appgw" {
 }
 
 resource "azurerm_cdn_frontdoor_route" "this" {
-  name                          = "${local.project}-route"
-  cdn_frontdoor_endpoint_id     = azurerm_cdn_frontdoor_endpoint.this.id
-  cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.this.id
+  name                            = "${local.project}-route"
+  cdn_frontdoor_endpoint_id       = azurerm_cdn_frontdoor_endpoint.this.id
+  cdn_frontdoor_origin_group_id   = azurerm_cdn_frontdoor_origin_group.this.id
   cdn_frontdoor_origin_ids        = [azurerm_cdn_frontdoor_origin.appgw.id]
   cdn_frontdoor_custom_domain_ids = [azurerm_cdn_frontdoor_custom_domain.this.id]
   enabled                         = true
@@ -63,7 +63,7 @@ resource "azurerm_cdn_frontdoor_route" "this" {
     query_string_caching_behavior = "IgnoreSpecifiedQueryStrings"
     query_strings                 = ["utm_source", "utm_medium", "utm_campaign", "gclid", "fbclid"]
     compression_enabled           = true
-    content_types_to_compress     = [
+    content_types_to_compress = [
       "text/html",
       "text/css",
       "text/javascript",

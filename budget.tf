@@ -11,14 +11,14 @@ resource "azurerm_consumption_budget_subscription" "this" {
   time_grain = "Monthly"
 
   time_period {
-    start_date = "2026-06-01T00:00:00Z"
+    start_date = local.env.budget.start_date
   }
 
   notification {
     enabled        = true
     threshold      = 75
     operator       = "GreaterThan"
-    threshold_type = "Actual"
+    threshold_type = "Forecasted"
 
     contact_emails = [local.env.admin_email]
   }

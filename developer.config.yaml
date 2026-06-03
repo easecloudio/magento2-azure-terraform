@@ -100,3 +100,4 @@ string:
 budget:
   amount: 500
   threshold_percent: 90
+  start_date: "2026-06-01T00:00:00Z"

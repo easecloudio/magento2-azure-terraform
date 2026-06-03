@@ -7,7 +7,7 @@ resource "azurerm_public_ip" "appgw" {
   location            = azurerm_resource_group.this.location
   allocation_method   = "Static"
   sku                 = "Standard"
-  dns_name_label      = "${local.project}-appgw"
+  domain_name_label   = "${local.project}-appgw"
   tags                = local.default_tags
 }
 

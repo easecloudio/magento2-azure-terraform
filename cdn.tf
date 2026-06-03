@@ -50,8 +50,9 @@ resource "azurerm_cdn_frontdoor_route" "this" {
   name                          = "${local.project}-route"
   cdn_frontdoor_endpoint_id     = azurerm_cdn_frontdoor_endpoint.this.id
   cdn_frontdoor_origin_group_id = azurerm_cdn_frontdoor_origin_group.this.id
-  cdn_frontdoor_origin_ids      = [azurerm_cdn_frontdoor_origin.appgw.id]
-  enabled                       = true
+  cdn_frontdoor_origin_ids        = [azurerm_cdn_frontdoor_origin.appgw.id]
+  cdn_frontdoor_custom_domain_ids = [azurerm_cdn_frontdoor_custom_domain.this.id]
+  enabled                         = true
 
   forwarding_protocol    = "HttpOnly"
   https_redirect_enabled = true
@@ -71,4 +72,19 @@ resource "azurerm_cdn_frontdoor_route" "this" {
       "image/svg+xml",
     ]
   }
+}
+
+resource "azurerm_cdn_frontdoor_custom_domain" "this" {
+  name                     = "${local.project}-custom-domain"
+  cdn_frontdoor_profile_id = azurerm_cdn_frontdoor_profile.this.id
+  host_name                = local.env.domain
+
+  tls {
+    certificate_type = "ManagedCertificate"
+  }
+}
+
+resource "azurerm_cdn_frontdoor_custom_domain_association" "this" {
+  cdn_frontdoor_custom_domain_id = azurerm_cdn_frontdoor_custom_domain.this.id
+  cdn_frontdoor_route_ids        = [azurerm_cdn_frontdoor_route.this.id]
 }

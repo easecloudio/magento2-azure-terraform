@@ -25,6 +25,25 @@ resource "azurerm_web_application_firewall_policy" "this" {
     }
   }
 
+  dynamic "custom_rules" {
+    for_each = length(try(local.env.waf.restricted_countries, [])) > 0 ? [1] : []
+    content {
+      name      = "GeoBlock"
+      priority  = 1
+      rule_type = "MatchRule"
+      action    = "Block"
+
+      match_conditions {
+        match_variables {
+          variable_name = "RemoteAddr"
+        }
+        operator           = "GeoMatch"
+        negation_condition = false
+        match_values       = local.env.waf.restricted_countries
+      }
+    }
+  }
+
   policy_settings {
     enabled                     = true
     mode                        = "Prevention"

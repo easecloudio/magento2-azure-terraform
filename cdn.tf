@@ -54,7 +54,21 @@ resource "azurerm_cdn_frontdoor_route" "this" {
   enabled                       = true
 
   forwarding_protocol    = "HttpOnly"
-  https_redirect_enabled = false
+  https_redirect_enabled = true
   patterns_to_match      = ["/*"]
   supported_protocols    = ["Http", "Https"]
+
+  cache {
+    query_string_caching_behavior = "IgnoreSpecifiedQueryStrings"
+    query_strings                 = ["utm_source", "utm_medium", "utm_campaign", "gclid", "fbclid"]
+    compression_enabled           = true
+    content_types_to_compress     = [
+      "text/html",
+      "text/css",
+      "text/javascript",
+      "application/javascript",
+      "application/json",
+      "image/svg+xml",
+    ]
+  }
 }

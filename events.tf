@@ -10,8 +10,6 @@ resource "azurerm_eventgrid_system_topic" "storage" {
   tags                   = local.default_tags
 }
 
-# Note: the webhook URL below is a placeholder. In practice this should point
-# to an Azure Function or Logic App that handles release deployment automation.
 resource "azurerm_eventgrid_system_topic_event_subscription" "release_deploy" {
   name                = "${local.project}-release-deploy"
   system_topic        = azurerm_eventgrid_system_topic.storage.name
@@ -23,7 +21,8 @@ resource "azurerm_eventgrid_system_topic_event_subscription" "release_deploy" {
     subject_begins_with = "/blobServices/default/containers/system/blobs/release/"
   }
 
-  webhook_endpoint {
-    url = "https://placeholder.example.com/webhook"
+  storage_queue_endpoint {
+    storage_account_id = azurerm_storage_account.this.id
+    queue_name         = azurerm_storage_queue.release_events.name
   }
 }

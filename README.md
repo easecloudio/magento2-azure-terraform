@@ -26,10 +26,10 @@ All configuration is driven by a single YAML file per environment (`developer.co
 Internet
    │
    ▼
-Azure WAF (Application Gateway WAF)
+Azure Front Door (CDN + HTTPS + redirect)
    │
    ▼
-Azure Application Gateway
+Azure Application Gateway + WAF
    │
    ├──▶ Varnish VMSS (cache layer)
    │         │
@@ -74,8 +74,8 @@ git clone https://github.com/easecloud/magento2-azure-terraform.git
 cd magento2-azure-terraform
 
 # 2. Copy and edit your environment config
-cp developer.config.yaml developer.config.yaml
-# Edit developer.config.yaml: set brand, domain, admin_email, azure.subscription_id, azure.resource_group, ssh_public_key, etc.
+cp developer.config.yaml myenv.config.yaml
+# Edit myenv.config.yaml: set brand, domain, admin_email, azure.subscription_id, azure.resource_group, ssh_public_key, etc.
 
 # 3. Initialize Terraform
 terraform init
@@ -86,6 +86,11 @@ terraform workspace new developer
 # 5. Plan and apply
 terraform plan -out developer.plan
 terraform apply developer.plan
+
+# 6. Delegate DNS — note the nameservers in the Terraform output:
+#    terraform output dns_zone_name_servers
+#    Add these as NS records at your domain registrar.
+#    Front Door will issue its managed TLS certificate once delegation is active.
 ```
 
 ## Configuration Reference

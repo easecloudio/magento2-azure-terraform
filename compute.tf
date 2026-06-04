@@ -49,7 +49,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
         : pool.id if pool.name == local.appgw_backend_pool_name])
         ] : each.key == "frontend" ? [
         one([for pool in azurerm_application_gateway.this.backend_address_pool
-        : pool.id if pool.name == local.appgw_frontend_backend_pool_name])
+        : pool.id if pool.name == local.appgw_admin_backend_pool_name])
       ] : null
     }
   }

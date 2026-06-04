@@ -119,7 +119,7 @@ resource "azurerm_application_gateway" "this" {
   }
 
   backend_address_pool {
-    name = local.appgw_frontend_backend_pool_name
+    name = local.appgw_admin_backend_pool_name
   }
 
   backend_http_settings {
@@ -133,13 +133,13 @@ resource "azurerm_application_gateway" "this" {
   }
 
   backend_http_settings {
-    name                  = local.appgw_frontend_http_settings_name
+    name                  = local.appgw_admin_http_settings_name
     cookie_based_affinity = "Disabled"
     port                  = 80
     protocol              = "Http"
     request_timeout       = 60
 
-    probe_name = local.appgw_frontend_probe_name
+    probe_name = local.appgw_admin_probe_name
   }
 
   probe {
@@ -153,7 +153,7 @@ resource "azurerm_application_gateway" "this" {
   }
 
   probe {
-    name                = local.appgw_frontend_probe_name
+    name                = local.appgw_admin_probe_name
     protocol            = "Http"
     host                = local.env.domain
     path                = "/${random_string.this["health_check"].result}"
@@ -177,8 +177,8 @@ resource "azurerm_application_gateway" "this" {
     path_rule {
       name                       = local.appgw_admin_path_rule_name
       paths                      = ["/${random_string.this["admin_path"].result}/*", "/${random_string.this["admin_path"].result}"]
-      backend_address_pool_name  = local.appgw_frontend_backend_pool_name
-      backend_http_settings_name = local.appgw_frontend_http_settings_name
+      backend_address_pool_name  = local.appgw_admin_backend_pool_name
+      backend_http_settings_name = local.appgw_admin_http_settings_name
     }
   }
 

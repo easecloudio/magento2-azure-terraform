@@ -32,3 +32,12 @@ locals {
   appgw_health_probe_name         = "${local.project}-health-probe"
   appgw_waf_policy_name           = "${local.project}-waf-policy"
 }
+
+resource "terraform_data" "workspace_validation" {
+  lifecycle {
+    precondition {
+      condition     = contains(["developer", "staging", "production"], local.environment)
+      error_message = "Terraform workspace must be 'developer', 'staging', or 'production'. Got: '${local.environment}'. Run: terraform workspace new developer"
+    }
+  }
+}

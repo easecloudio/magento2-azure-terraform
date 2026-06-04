@@ -24,18 +24,6 @@ resource "azurerm_network_security_group" "compute" {
   }
 
   security_rule {
-    name                       = "allow-imgproxy-from-gateway"
-    priority                   = 110
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "8080"
-    source_address_prefix      = azurerm_subnet.gateway.address_prefixes[0]
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
     name                       = "allow-internal-varnish-to-frontend"
     priority                   = 120
     direction                  = "Inbound"
@@ -94,6 +82,18 @@ resource "azurerm_network_security_group" "data" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "6379"
+    source_address_prefix      = azurerm_subnet.compute.address_prefixes[0]
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "allow-opensearch-from-compute"
+    priority                   = 120
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "9200"
     source_address_prefix      = azurerm_subnet.compute.address_prefixes[0]
     destination_address_prefix = "*"
   }

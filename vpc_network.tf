@@ -37,3 +37,25 @@ resource "azurerm_subnet" "gateway" {
   virtual_network_name = azurerm_virtual_network.this.name
   address_prefixes     = [cidrsubnet(local.env.vnet.cidr_block, 4, 2)]
 }
+
+resource "azurerm_subnet" "mysql" {
+  name                 = "${local.project}-mysql-subnet"
+  resource_group_name  = azurerm_resource_group.this.name
+  virtual_network_name = azurerm_virtual_network.this.name
+  address_prefixes     = [cidrsubnet(local.env.vnet.cidr_block, 4, 3)]
+
+  delegation {
+    name = "mysql-delegation"
+    service_delegation {
+      name    = "Microsoft.DBforMySQL/flexibleServers"
+      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
+    }
+  }
+}
+
+resource "azurerm_subnet" "bastion" {
+  name                 = "AzureBastionSubnet"
+  resource_group_name  = azurerm_resource_group.this.name
+  virtual_network_name = azurerm_virtual_network.this.name
+  address_prefixes     = [cidrsubnet(local.env.vnet.cidr_block, 4, 4)]
+}

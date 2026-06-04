@@ -12,6 +12,8 @@ resource "azurerm_mysql_flexible_server" "this" {
   version                      = local.env.mysql.engine_version
   backup_retention_days        = local.env.mysql.backup_retention_days
   geo_redundant_backup_enabled = false
+  delegated_subnet_id          = azurerm_subnet.mysql.id
+  private_dns_zone_id          = azurerm_private_dns_zone.internal.id
 
   high_availability {
     mode = local.env.mysql.high_availability ? "ZoneRedundant" : "Disabled"
@@ -22,7 +24,8 @@ resource "azurerm_mysql_flexible_server" "this" {
     auto_grow_enabled = true
   }
 
-  tags = local.default_tags
+  tags       = local.default_tags
+  depends_on = [azurerm_private_dns_zone_virtual_network_link.this]
 }
 
 resource "azurerm_mysql_flexible_server_configuration" "this" {

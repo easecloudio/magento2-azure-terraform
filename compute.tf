@@ -10,7 +10,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
   sku                 = each.value.vm_size
   instances           = each.value.desired_capacity
   admin_username      = local.env.brand
-  upgrade_mode        = "Rolling"
+  upgrade_mode        = each.key == "cron" ? "Automatic" : "Rolling"
   zones               = ["1", "2", "3"]
 
   admin_ssh_key {
@@ -47,7 +47,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
       application_gateway_backend_address_pool_ids = each.key == "varnish" ? [
         one([for pool in azurerm_application_gateway.this.backend_address_pool
         : pool.id if pool.name == local.appgw_backend_pool_name])
-        ] : each.key == "frontend" ? [
+        ] : each.key == "admin" ? [
         one([for pool in azurerm_application_gateway.this.backend_address_pool
         : pool.id if pool.name == local.appgw_admin_backend_pool_name])
       ] : null
@@ -61,24 +61,30 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
     location    = local.env.azure.location
   }))
 
-  rolling_upgrade_policy {
-    max_batch_instance_percent              = 20
-    max_unhealthy_instance_percent          = 20
-    max_unhealthy_upgraded_instance_percent = 20
-    pause_time_between_batches              = "PT0S"
+  dynamic "rolling_upgrade_policy" {
+    for_each = each.key != "cron" ? [1] : []
+    content {
+      max_batch_instance_percent              = 20
+      max_unhealthy_instance_percent          = 20
+      max_unhealthy_upgraded_instance_percent = 20
+      pause_time_between_batches              = "PT0S"
+    }
   }
 
-  extension {
-    name                 = "HealthExtension"
-    publisher            = "Microsoft.ManagedServices"
-    type                 = "ApplicationHealthLinux"
-    type_handler_version = "1.0"
+  dynamic "extension" {
+    for_each = each.key != "cron" ? [1] : []
+    content {
+      name                 = "HealthExtension"
+      publisher            = "Microsoft.ManagedServices"
+      type                 = "ApplicationHealthLinux"
+      type_handler_version = "1.0"
 
-    settings = jsonencode({
-      protocol    = "http"
-      port        = 80
-      requestPath = "/"
-    })
+      settings = jsonencode({
+        protocol    = "http"
+        port        = 80
+        requestPath = "/"
+      })
+    }
   }
 
   tags = merge(local.default_tags, { instance_type = each.key })

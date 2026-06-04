@@ -3,11 +3,12 @@
 ///////////////////////////////////////////////////////////[ SERVICE BUS / MESSAGE QUEUE ]/////////////////////////////////////////////////////
 
 resource "azurerm_servicebus_namespace" "this" {
-  name                = "${local.project}-servicebus"
-  resource_group_name = azurerm_resource_group.this.name
-  location            = azurerm_resource_group.this.location
-  sku                 = local.env.service_bus.sku
-  tags                = local.default_tags
+  name                         = "${local.project}-servicebus"
+  resource_group_name          = azurerm_resource_group.this.name
+  location                     = azurerm_resource_group.this.location
+  sku                          = local.env.service_bus.sku
+  premium_messaging_partitions = local.env.service_bus.sku == "Premium" ? 1 : 0
+  tags                         = local.default_tags
 }
 
 resource "azurerm_servicebus_queue" "this" {

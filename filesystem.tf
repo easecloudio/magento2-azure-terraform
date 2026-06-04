@@ -2,7 +2,7 @@
 ///////////////////////////////////////////////////////////[ AZURE FILES (NFS) ]/////////////////////////////////////////////////////
 
 resource "azurerm_storage_account" "nfs" {
-  name                       = "${replace(local.project, "-", "")}nfssa"
+  name                       = "${substr(replace(local.project, "-", ""), 0, 19)}nfssa"
   resource_group_name        = azurerm_resource_group.this.name
   location                   = azurerm_resource_group.this.location
   account_tier               = "Premium"

@@ -2,7 +2,7 @@
 ///////////////////////////////////////////////////////////[ BLOB STORAGE ]/////////////////////////////////////////////////////
 
 resource "azurerm_storage_account" "this" {
-  name                     = "${replace(local.project, "-", "")}sa"
+  name                     = "${substr(replace(local.project, "-", ""), 0, 22)}sa"
   resource_group_name      = azurerm_resource_group.this.name
   location                 = azurerm_resource_group.this.location
   account_tier             = "Standard"

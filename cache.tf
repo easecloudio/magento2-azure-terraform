@@ -12,5 +12,7 @@ resource "azurerm_redis_cache" "this" {
   sku_name             = local.env.redis.sku
   non_ssl_port_enabled = false
   minimum_tls_version  = "1.2"
+  replicas_per_primary = 1
+  zones                = ["1", "2"]
   tags                 = local.default_tags
 }

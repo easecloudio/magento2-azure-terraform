@@ -59,6 +59,29 @@ resource "azurerm_monitor_metric_alert" "cpu_high_varnish" {
   }
 }
 
+resource "azurerm_monitor_metric_alert" "cpu_high_admin" {
+  name                = "${local.project}-admin-cpu-high"
+  resource_group_name = azurerm_resource_group.this.name
+  scopes              = [azurerm_linux_virtual_machine_scale_set.this["admin"].id]
+  description         = "Alert when admin VMSS CPU exceeds 85%"
+  severity            = 2
+  frequency           = "PT1M"
+  window_size         = "PT5M"
+  tags                = local.default_tags
+
+  criteria {
+    metric_namespace = "Microsoft.Compute/virtualMachineScaleSets"
+    metric_name      = "Percentage CPU"
+    aggregation      = "Average"
+    operator         = "GreaterThan"
+    threshold        = 85
+  }
+
+  action {
+    action_group_id = azurerm_monitor_action_group.default.id
+  }
+}
+
 resource "azurerm_monitor_metric_alert" "appgw_5xx" {
   name                = "${local.project}-appgw-5xx"
   resource_group_name = azurerm_resource_group.this.name

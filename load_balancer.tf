@@ -8,6 +8,7 @@ resource "azurerm_public_ip" "appgw" {
   allocation_method   = "Static"
   sku                 = "Standard"
   domain_name_label   = "${local.project}-appgw"
+  zones               = ["1", "2", "3"]
   tags                = local.default_tags
 }
 
@@ -59,6 +60,7 @@ resource "azurerm_application_gateway" "this" {
   location            = azurerm_resource_group.this.location
   firewall_policy_id  = azurerm_web_application_firewall_policy.this.id
   tags                = local.default_tags
+  zones               = ["1", "2", "3"]
 
   sku {
     name = "WAF_v2"
@@ -66,7 +68,7 @@ resource "azurerm_application_gateway" "this" {
   }
 
   autoscale_configuration {
-    min_capacity = 1
+    min_capacity = 2
     max_capacity = 4
   }
 

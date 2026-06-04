@@ -88,6 +88,7 @@ waf:
     - "SD"
     - "SY"
     - "CU"
+  admin_allowed_ips: []  # Set to office/VPN CIDRs e.g. ["1.2.3.4/32"] to restrict admin access
 
 password:
   - "database"

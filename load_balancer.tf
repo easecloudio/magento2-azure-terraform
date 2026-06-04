@@ -45,6 +45,33 @@ resource "azurerm_web_application_firewall_policy" "this" {
     }
   }
 
+  dynamic "custom_rules" {
+    for_each = length(try(local.env.waf.admin_allowed_ips, [])) > 0 ? [1] : []
+    content {
+      name      = "AdminIPRestriction"
+      priority  = 2
+      rule_type = "MatchRule"
+      action    = "Block"
+
+      match_conditions {
+        match_variables {
+          variable_name = "RequestUri"
+        }
+        operator     = "BeginsWith"
+        match_values = ["/${random_string.this["admin_path"].result}/"]
+      }
+
+      match_conditions {
+        match_variables {
+          variable_name = "RemoteAddr"
+        }
+        operator           = "IPMatch"
+        negation_condition = true
+        match_values       = local.env.waf.admin_allowed_ips
+      }
+    }
+  }
+
   policy_settings {
     enabled                     = true
     mode                        = "Prevention"
@@ -91,6 +118,10 @@ resource "azurerm_application_gateway" "this" {
     name = local.appgw_backend_pool_name
   }
 
+  backend_address_pool {
+    name = local.appgw_frontend_backend_pool_name
+  }
+
   backend_http_settings {
     name                  = local.appgw_http_settings_name
     cookie_based_affinity = "Disabled"
@@ -101,8 +132,28 @@ resource "azurerm_application_gateway" "this" {
     probe_name = local.appgw_health_probe_name
   }
 
+  backend_http_settings {
+    name                  = local.appgw_frontend_http_settings_name
+    cookie_based_affinity = "Disabled"
+    port                  = 80
+    protocol              = "Http"
+    request_timeout       = 60
+
+    probe_name = local.appgw_frontend_probe_name
+  }
+
   probe {
     name                = local.appgw_health_probe_name
+    protocol            = "Http"
+    host                = local.env.domain
+    path                = "/${random_string.this["health_check"].result}"
+    interval            = 30
+    timeout             = 30
+    unhealthy_threshold = 3
+  }
+
+  probe {
+    name                = local.appgw_frontend_probe_name
     protocol            = "Http"
     host                = local.env.domain
     path                = "/${random_string.this["health_check"].result}"
@@ -118,12 +169,24 @@ resource "azurerm_application_gateway" "this" {
     protocol                       = "Http"
   }
 
+  url_path_map {
+    name                               = local.appgw_url_path_map_name
+    default_backend_address_pool_name  = local.appgw_backend_pool_name
+    default_backend_http_settings_name = local.appgw_http_settings_name
+
+    path_rule {
+      name                       = local.appgw_admin_path_rule_name
+      paths                      = ["/${random_string.this["admin_path"].result}/*", "/${random_string.this["admin_path"].result}"]
+      backend_address_pool_name  = local.appgw_frontend_backend_pool_name
+      backend_http_settings_name = local.appgw_frontend_http_settings_name
+    }
+  }
+
   request_routing_rule {
-    name                       = local.appgw_request_routing_http_name
-    rule_type                  = "Basic"
-    priority                   = 100
-    http_listener_name         = local.appgw_listener_http_name
-    backend_address_pool_name  = local.appgw_backend_pool_name
-    backend_http_settings_name = local.appgw_http_settings_name
+    name               = local.appgw_request_routing_http_name
+    rule_type          = "PathBasedRouting"
+    priority           = 100
+    http_listener_name = local.appgw_listener_http_name
+    url_path_map_name  = local.appgw_url_path_map_name
   }
 }

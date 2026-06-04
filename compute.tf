@@ -47,6 +47,9 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
       application_gateway_backend_address_pool_ids = each.key == "varnish" ? [
         one([for pool in azurerm_application_gateway.this.backend_address_pool
         : pool.id if pool.name == local.appgw_backend_pool_name])
+        ] : each.key == "frontend" ? [
+        one([for pool in azurerm_application_gateway.this.backend_address_pool
+        : pool.id if pool.name == local.appgw_frontend_backend_pool_name])
       ] : null
     }
   }

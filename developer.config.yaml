@@ -41,7 +41,7 @@ mysql:
   backup_retention_days: 7
   engine_version: "8.0.21"
   admin_login: "magentoadmin"
-  high_availability: false
+  high_availability: true
   parameters:
     - { name: "max_allowed_packet",             value: "268435456" }
     - { name: "wait_timeout",                   value: "7200" }

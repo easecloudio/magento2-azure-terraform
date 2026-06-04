@@ -11,12 +11,14 @@ resource "azurerm_mysql_flexible_server" "this" {
   sku_name                     = local.env.mysql.sku
   version                      = local.env.mysql.engine_version
   backup_retention_days        = local.env.mysql.backup_retention_days
-  geo_redundant_backup_enabled = false
+  geo_redundant_backup_enabled = local.environment != "developer"
   delegated_subnet_id          = azurerm_subnet.mysql.id
   private_dns_zone_id          = azurerm_private_dns_zone.internal.id
+  zone                         = "1"
 
   high_availability {
-    mode = local.env.mysql.high_availability ? "ZoneRedundant" : "Disabled"
+    mode                      = local.env.mysql.high_availability ? "ZoneRedundant" : "Disabled"
+    standby_availability_zone = local.env.mysql.high_availability ? "2" : null
   }
 
   storage {

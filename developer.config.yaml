@@ -29,6 +29,18 @@ vmss:
     desired_capacity: 2
     min_count: 2
     max_count: 8
+  admin:
+    vm_size: "Standard_D2ps_v5"
+    os_disk_size_gb: 50
+    desired_capacity: 1
+    min_count: 1
+    max_count: 2
+  cron:
+    vm_size: "Standard_D2ps_v5"
+    os_disk_size_gb: 50
+    desired_capacity: 1
+    min_count: 1
+    max_count: 1
 
 autoscale:
   cooldown_minutes: 5

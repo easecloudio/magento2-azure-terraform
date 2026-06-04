@@ -1,0 +1,17 @@
+# Copy this file to backend.tf and fill in your storage account details.
+# Create the storage account and container before running terraform init:
+#
+#   az group create -n tfstate-rg -l eastus
+#   az storage account create -n <unique-name> -g tfstate-rg --sku Standard_LRS
+#   az storage container create -n tfstate --account-name <unique-name>
+#
+# Then run: terraform init -reconfigure
+
+terraform {
+  backend "azurerm" {
+    resource_group_name  = "tfstate-rg"
+    storage_account_name = "<your-tfstate-storage-account>"
+    container_name       = "tfstate"
+    key                  = "magento2-azure.tfstate"
+  }
+}

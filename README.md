@@ -5,6 +5,8 @@
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 [![CI](https://github.com/easecloudio/magento2-azure-terraform/actions/workflows/terraform-ci.yml/badge.svg)](https://github.com/easecloudio/magento2-azure-terraform/actions/workflows/terraform-ci.yml)
 
+![Architecture](docs/architecture.gif)
+
 Production-ready, zone-redundant Magento 2 infrastructure on Microsoft Azure — provisioned entirely with Terraform. All configuration lives in a single YAML file per environment; no `.tfvars` files needed.
 
 ## What this provisions

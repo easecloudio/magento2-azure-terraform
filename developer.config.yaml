@@ -57,10 +57,10 @@ redis:
     - "session"
     - "cache"
 
-search:
-  sku: "standard"
-  replica_count: 1
-  partition_count: 1
+opensearch:
+  vm_size: "Standard_D2ps_v5"
+  disk_size_gb: 50
+  version: "2.17.0"
 
 service_bus:
   sku: "Standard"

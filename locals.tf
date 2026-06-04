@@ -32,11 +32,11 @@ locals {
   appgw_health_probe_name         = "${local.project}-health-probe"
   appgw_waf_policy_name           = "${local.project}-waf-policy"
 
-  appgw_frontend_backend_pool_name  = "${local.project}-frontend-pool"
-  appgw_frontend_http_settings_name = "${local.project}-frontend-settings"
-  appgw_frontend_probe_name         = "${local.project}-frontend-probe"
-  appgw_url_path_map_name           = "${local.project}-path-map"
-  appgw_admin_path_rule_name        = "${local.project}-admin-rule"
+  appgw_admin_backend_pool_name  = "${local.project}-admin-pool"
+  appgw_admin_http_settings_name = "${local.project}-admin-settings"
+  appgw_admin_probe_name         = "${local.project}-admin-probe"
+  appgw_url_path_map_name        = "${local.project}-path-map"
+  appgw_admin_path_rule_name     = "${local.project}-admin-rule"
 }
 
 resource "terraform_data" "workspace_validation" {

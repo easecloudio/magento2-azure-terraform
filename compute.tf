@@ -11,6 +11,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "this" {
   instances           = each.value.desired_capacity
   admin_username      = local.env.brand
   upgrade_mode        = "Rolling"
+  zones               = ["1", "2", "3"]
 
   admin_ssh_key {
     username   = local.env.brand

@@ -9,6 +9,8 @@
 
 Production-ready, zone-redundant Magento 2 infrastructure on Microsoft Azure — provisioned entirely with Terraform. All configuration lives in a single YAML file per environment; no `.tfvars` files needed.
 
+**Developed and maintained by [EaseCloud](https://easecloud.io)** — cloud-native, AI-driven, and data infrastructure solutions.
+
 ## What this provisions
 
 | Tier | Service | Details |
@@ -479,6 +481,40 @@ terraform output environment               # Active workspace name
 ├── backend.tf.example     # Remote state backend template (copy to backend.tf)
 └── developer.config.yaml  # Reference config (copy per environment)
 ```
+
+---
+
+## About EaseCloud
+
+EaseCloud is a cloud consulting and solutions company specializing in:
+
+- Cloud-native application development
+- AI & automation integrations
+- DevOps and infrastructure management
+- Magento 2 hosting and platform engineering
+
+We built this project to provide a production-grade, open-source Azure infrastructure baseline for Magento 2 — demonstrating our expertise in cloud architecture, security, and automation.
+
+If your team is scaling Magento 2 on Azure or needs help with infrastructure design, deployment pipelines, or managed support, [get in touch](https://easecloud.io).
+
+📧 [support@easecloud.io](mailto:support@easecloud.io)
+🌐 [easecloud.io](https://easecloud.io)
+
+---
+
+## Bug Reports & Issues
+
+Found a bug or have a feature request?
+
+🐛 [Create a GitHub issue](https://github.com/easecloudio/magento2-azure-terraform/issues)
+
+Please include:
+- Terraform version (`terraform version`)
+- Azure provider version
+- Workspace name and relevant config excerpt (redact credentials)
+- Steps to reproduce
+- Expected vs actual behavior
+- Any error messages from `terraform plan` or `terraform apply`
 
 ---
 
